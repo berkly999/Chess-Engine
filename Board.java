@@ -131,13 +131,46 @@ public class Board {
             }
             System.out.print("\n");
         }
-        // System.out.println("\n");
-        // for (int y = 0; y < 12; y++) {
-        //     for (int x = 0; x < 10; x++) {
-        //         //System.out.print(NUMERICS_FEN.get(this.state[10*y + x]));
-        //         System.out.print((this.state[10*y + x]));
-        //     }
-        //     System.out.print("\n");
-        // }
+
+    }
+
+    public String toFEN() {
+        String fen = "";
+
+        //writing the pieces of the board
+        fen = fen + this.getPiecesFEN(this.state) + " " + this.nextPlayer + " ";
+        fen = (this.castling.equals("")) ? (fen + "- ") : (fen + this.castling + " ");
+        fen = (this.enPassant.equals("")) ? (fen + "- ") : (fen + this.enPassant + " ");
+        fen = fen + String.valueOf(this.halfMoves) + " " + String.valueOf(this.fullMoves);
+
+        return fen;
+    }
+
+    private String getPiecesFEN(int[] state) {
+        String fen = "";
+        int spaceCount = 0;
+        for (int y = 2; y < 10; y++) {
+            for (int x = 1; x < 9; x++) {
+                if (this.state[10*y + x] == 0) {
+                    spaceCount++;
+                }
+
+                else {
+                    if (spaceCount != 0) {
+                        fen = fen + String.valueOf(spaceCount);
+                        spaceCount = 0;
+                    }
+
+                    fen = fen + NUMERICS_FEN.get(this.state[10*y +x]);
+                }
+            }
+
+            if (spaceCount != 0) {
+                fen = fen + String.valueOf(spaceCount);
+                spaceCount = 0;
+            }
+            fen = fen + "/";
+        }
+        return fen.substring(0, fen.length() - 1);
     }
 }
